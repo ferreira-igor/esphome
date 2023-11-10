@@ -29,6 +29,9 @@ ota:
 api:
   reboot_timeout: 24h
 
+dashboard_import:
+  package_import_url: github://ferreira-igor/esphome/blob/main/environment-sensor.yml@main
+
 status_led:
   pin:
     number: 8
