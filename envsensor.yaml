@@ -1,0 +1,117 @@
+substitutions:
+  friendly_name: "Environment Sensor"
+
+esphome:
+  name: envsensor
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: true
+  project:
+    name: ferreiraigor.envsensor
+    version: "1.0.0"
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+logger:
+  level: DEBUG
+
+wifi:
+  ap:
+    password: "esphome1234"
+
+captive_portal:
+
+web_server:
+  port: 80
+  log: false
+  ota: false
+
+ota:
+
+api:
+  reboot_timeout: 24h
+
+status_led:
+  pin:
+    number: 8
+    inverted: true
+
+time:
+  - platform: sntp
+    id: sntp_time
+
+dashboard_import:
+  package_import_url: github://ferreira-igor/esphome/envsensor.yaml@main
+
+spi:
+  clk_pin: 6
+  mosi_pin: 7
+  miso_pin: 5
+
+spi_device:
+  cs_pin: 4
+
+i2c:
+  scl: 0
+  sda: 1
+  scan: true
+  frequency: 400kHz
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+
+binary_sensor:
+  - platform: status
+    name: "Connection Status"
+
+  - platform: gpio
+    pin:
+      number: 9
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    id: button_boot
+
+  - platform: gpio
+    pin:
+      number: 10
+      mode:
+        input: true
+        pullup: false
+    device_class: motion
+    name: "Motion"
+    id: sensor_motion
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal Strength"
+
+  - platform: uptime
+    name: "System Uptime"
+
+  - platform: internal_temperature
+    name: "Internal Temperature"
+    id: sensor_internal_temperature
+
+  - platform: bme280
+    temperature:
+      name: "Temperature"
+      id: sensor_temperature
+    humidity:
+      name: "Humidity"
+      id: sensor_humidity
+    pressure:
+      name: "Pressure"
+      id: sensor_pressure
+
+  - platform: sgp4x
+    voc:
+      name: "Volatile Organic Compound Index"
+      id: sensor_voc
+    compensation:
+      temperature_source: sensor_temperature
+      humidity_source: sensor_humidity
